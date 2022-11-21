@@ -694,7 +694,7 @@ class TestConnector(BaseConnector):
         # make rest call
         headers = self.authenticationHeaders()
         ret_val, response = self._make_rest_call(
-            '/hash_exceptions/block_list/', action_result, headers=headers, json=parameters
+            '/hash_exceptions/blocklist/', action_result, headers=headers, json=parameters
         )
 
         if phantom.is_fail(ret_val):
@@ -746,7 +746,7 @@ class TestConnector(BaseConnector):
         # make rest call
         headers = self.authenticationHeaders()
         ret_val, response = self._make_rest_call(
-            '/hash_exceptions/allow_list/', action_result, headers=headers, json=parameters
+            '/hash_exceptions/allowlist/', action_result, headers=headers, json=parameters
         )
 
         if phantom.is_fail(ret_val):
