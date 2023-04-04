@@ -347,7 +347,8 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 **group\_name** |  optional  | Name of endpoint group | string | 
 **platform** |  optional  | Type of operating system | string | 
 **alias** |  optional  | Endpoint alias name | string | 
-**isolate** |  optional  | If an endpoint has been isolated | boolean | 
+**isolated** |  optional  | Limit to only isolated hosts | boolean | 
+**unisolated** |  optional  | Limit to only unisolated hosts | boolean | 
 **hostname** |  optional  | Name of host | string |  `host name` 
 **scan\_status** |  optional  | Scan status of an endpoint \(select from defined values\) | string | 
 
@@ -363,7 +364,8 @@ action\_result\.parameter\.ip\_list | string |
 action\_result\.parameter\.group\_name | string | 
 action\_result\.parameter\.platform | string | 
 action\_result\.parameter\.alias | string | 
-action\_result\.parameter\.isolate | boolean | 
+action\_result\.parameter\.isolated | boolean | 
+action\_result\.parameter\.unisolated | boolean | 
 action\_result\.parameter\.hostname | string |  `host name` 
 action\_result\.parameter\.scan\_status | string | 
 action\_result\.data | string | 
@@ -391,7 +393,8 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 **group\_name** |  optional  | Name of endpoint group | string | 
 **platform** |  optional  | Type of operating system | string | 
 **alias** |  optional  | Endpoint alias name | string | 
-**isolate** |  optional  | If an endpoint has been isolated | boolean | 
+**isolated** |  optional  | Limit to only isolated hosts | boolean | 
+**unisolated** |  optional  | Limit to only unisolated hosts | boolean | 
 **hostname** |  optional  | Name of host | string |  `host name` 
 **scan\_status** |  optional  | Scan status of an endpoint \(select from defined values\) | string | 
 
@@ -407,7 +410,8 @@ action\_result\.parameter\.ip\_list | string |
 action\_result\.parameter\.group\_name | string | 
 action\_result\.parameter\.platform | string | 
 action\_result\.parameter\.alias | string | 
-action\_result\.parameter\.isolate | boolean | 
+action\_result\.parameter\.isolated | boolean | 
+action\_result\.parameter\.unisolated | boolean | 
 action\_result\.parameter\.hostname | string |  `host name` 
 action\_result\.parameter\.scan\_status | string | 
 action\_result\.data | string | 
