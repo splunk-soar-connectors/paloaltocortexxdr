@@ -1057,11 +1057,17 @@
                     "data_type": "string",
                     "order": 8
                 },
-                "isolate": {
-                    "description": "If an endpoint has been isolated",
+                "isolated": {
+                    "description": "Limit to only isolated hosts",
                     "data_type": "boolean",
                     "default": false,
                     "order": 9
+                },
+                "unisolated": {
+                    "description": "Limit to only unisolated hosts",
+                    "data_type": "boolean",
+                    "default": false,
+                    "order": 10
                 },
                 "hostname": {
                     "description": "Name of host",
@@ -1070,7 +1076,7 @@
                     "contains": [
                         "host name"
                     ],
-                    "order": 10
+                    "order": 11
                 },
                 "scan_status": {
                     "description": "Scan status of an endpoint (select from defined values)",
@@ -1085,7 +1091,7 @@
                         "success",
                         "error"
                     ],
-                    "order": 11
+                    "order": 12
                 }
             },
             "output": [
@@ -1151,10 +1157,20 @@
                     "column_order": 8
                 },
                 {
-                    "data_path": "action_result.parameter.isolate",
+                    "data_path": "action_result.parameter.isolated",
                     "data_type": "boolean",
-                    "column_name": "Isolate",
+                    "column_name": "Isolated",
                     "column_order": 9,
+                    "example_values": [
+                        true,
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.unisolated",
+                    "data_type": "boolean",
+                    "column_name": "Unisolated",
+                    "column_order": 10,
                     "example_values": [
                         true,
                         false
@@ -1167,13 +1183,13 @@
                         "host name"
                     ],
                     "column_name": "Hostname",
-                    "column_order": 10
+                    "column_order": 11
                 },
                 {
                     "data_path": "action_result.parameter.scan_status",
                     "data_type": "string",
                     "column_name": "Scan Status",
-                    "column_order": 11
+                    "column_order": 12
                 },
                 {
                     "data_path": "action_result.data",
@@ -1183,7 +1199,7 @@
                     "data_path": "action_result.status",
                     "data_type": "string",
                     "column_name": "Status",
-                    "column_order": 12,
+                    "column_order": 13,
                     "example_values": [
                         "success",
                         "failed"
@@ -1281,11 +1297,17 @@
                     "data_type": "string",
                     "order": 8
                 },
-                "isolate": {
-                    "description": "If an endpoint has been isolated",
+                "isolated": {
+                    "description": "Limit to only isolated hosts",
                     "data_type": "boolean",
                     "default": false,
                     "order": 9
+                },
+                "unisolated": {
+                    "description": "Limit to only unisolated hosts",
+                    "data_type": "boolean",
+                    "default": false,
+                    "order": 10
                 },
                 "hostname": {
                     "description": "Name of host",
@@ -1294,7 +1316,7 @@
                     "contains": [
                         "host name"
                     ],
-                    "order": 10
+                    "order": 11
                 },
                 "scan_status": {
                     "description": "Scan status of an endpoint (select from defined values)",
@@ -1309,7 +1331,7 @@
                         "success",
                         "error"
                     ],
-                    "order": 11
+                    "order": 12
                 }
             },
             "output": [
@@ -1375,10 +1397,20 @@
                     "column_order": 8
                 },
                 {
-                    "data_path": "action_result.parameter.isolate",
+                    "data_path": "action_result.parameter.isolated",
                     "data_type": "boolean",
-                    "column_name": "Isolate",
+                    "column_name": "Isolated",
                     "column_order": 9,
+                    "example_values": [
+                        true,
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.unisolated",
+                    "data_type": "boolean",
+                    "column_name": "Unisolated",
+                    "column_order": 10,
                     "example_values": [
                         true,
                         false
@@ -1391,13 +1423,13 @@
                         "host name"
                     ],
                     "column_name": "Hostname",
-                    "column_order": 10
+                    "column_order": 11
                 },
                 {
                     "data_path": "action_result.parameter.scan_status",
                     "data_type": "string",
                     "column_name": "Scan Status",
-                    "column_order": 11
+                    "column_order": 12
                 },
                 {
                     "data_path": "action_result.data",
@@ -1407,7 +1439,7 @@
                     "data_path": "action_result.status",
                     "data_type": "string",
                     "column_name": "Status",
-                    "column_order": 12,
+                    "column_order": 13,
                     "example_values": [
                         "success",
                         "failed"

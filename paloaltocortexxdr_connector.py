@@ -870,7 +870,8 @@ class TestConnector(BaseConnector):
         group_name = param.get("group_name")
         platform = param.get("platform")
         alias = param.get("alias")
-        isolate = param.get("isolate", False)
+        isolated = param.get("isolated")
+        unisolated = param.get("unisolated")
         hostname = param.get("hostname")
         scan_status = param.get("scan_status")
 
@@ -950,13 +951,18 @@ class TestConnector(BaseConnector):
                 obj["operator"] = "in"
                 obj["value"] = aliases
                 filters.append(obj)
-            if isolate is True or isolate is False:
+            if isolated:
                 isolates = []
                 obj = {}
-                if isolate is True:
-                    isolates.append("isolated")
-                else:
-                    isolates.append("unisolated")
+                isolates.append("isolated")
+                obj["field"] = "isolate"
+                obj["operator"] = "in"
+                obj["value"] = isolates
+                filters.append(obj)
+            if unisolated:
+                isolates = []
+                obj = {}
+                isolates.append("unisolated")
                 obj["field"] = "isolate"
                 obj["operator"] = "in"
                 obj["value"] = isolates
@@ -1032,7 +1038,8 @@ class TestConnector(BaseConnector):
         group_name = param.get("group_name")
         platform = param.get("platform")
         alias = param.get("alias")
-        isolate = param.get("isolate", False)
+        isolated = param.get("isolated")
+        unisolated = param.get("unisolated")
         hostname = param.get("hostname")
         scan_status = param.get("scan_status")
 
@@ -1112,13 +1119,18 @@ class TestConnector(BaseConnector):
                 obj["operator"] = "in"
                 obj["value"] = aliases
                 filters.append(obj)
-            if isolate is True or isolate is False:
+            if isolated:
                 isolates = []
                 obj = {}
-                if isolate is True:
-                    isolates.append("isolated")
-                else:
-                    isolates.append("unisolated")
+                isolates.append("isolated")
+                obj["field"] = "isolate"
+                obj["operator"] = "in"
+                obj["value"] = isolates
+                filters.append(obj)
+            if unisolated:
+                isolates = []
+                obj = {}
+                isolates.append("unisolated")
                 obj["field"] = "isolate"
                 obj["operator"] = "in"
                 obj["value"] = isolates
