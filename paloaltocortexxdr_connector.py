@@ -1,26 +1,36 @@
 # File: paloaltocortexxdr_connector.py
 #
-# Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)
+# Copyright (c) Cyberforce Limited, 2021-2023
 #
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under
+# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+# either express or implied. See the License for the specific language governing permissions
+# and limitations under the License.
 
 # Python 3 Compatibility imports
 from __future__ import print_function, unicode_literals
 
+import hashlib
+import json
+import secrets
+import string
+from datetime import datetime, timedelta, timezone
+
 # Phantom App imports
 import phantom.app as phantom
-from phantom.base_connector import BaseConnector
+import requests
+from bs4 import BeautifulSoup
 from phantom.action_result import ActionResult
+from phantom.base_connector import BaseConnector
 
 # Usage of the consts file is recommended
 from paloaltocortexxdr_consts import *
-import requests
-import json
-from bs4 import BeautifulSoup
-
-from datetime import datetime, timezone, timedelta
-import secrets
-import string
-import hashlib
 
 
 class RetVal(tuple):
@@ -55,28 +65,28 @@ class TestConnector(BaseConnector):
         try:
             if e.args:
                 if len(e.args) > 1:
-                    error_code = e.args[0]
-                    error_msg = e.args[1]
+                    err_code = e.args[0]
+                    err_msg = e.args[1]
                 elif len(e.args) == 1:
-                    error_code = ERR_CODE_MSG
-                    error_msg = e.args[0]
+                    err_code = ERR_CODE_MSG
+                    err_msg = e.args[0]
             else:
-                error_code = ERR_CODE_MSG
-                error_msg = ERR_MSG_UNAVAILABLE
+                err_code = ERR_CODE_MSG
+                err_msg = ERR_MSG_UNAVAILABLE
         except:
-            error_code = ERR_CODE_MSG
-            error_msg = ERR_MSG_UNAVAILABLE
+            err_code = ERR_CODE_MSG
+            err_msg = ERR_MSG_UNAVAILABLE
 
         try:
-            if error_code in ERR_CODE_MSG:
-                error_text = "Error Message: {0}".format(error_msg)
+            if err_code in ERR_CODE_MSG:
+                err_text = "Error Message: {0}".format(err_msg)
             else:
-                error_text = "Error Code: {0}. Error Message: {1}".format(error_code, error_msg)
+                err_text = "Error Code: {0}. Error Message: {1}".format(err_code, err_msg)
         except:
             self.debug_print(PARSE_ERR_MSG)
-            error_text = PARSE_ERR_MSG
+            err_text = PARSE_ERR_MSG
 
-        return error_text
+        return err_text
 
     def _validate_integer(self, action_result, parameter, key):
         if parameter is not None:
@@ -1602,8 +1612,9 @@ class TestConnector(BaseConnector):
 
 
 def main():
-    import pudb
     import argparse
+
+    import pudb
 
     pudb.set_trace()
 
