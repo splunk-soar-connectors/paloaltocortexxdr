@@ -1,2 +1,2 @@
 **Unreleased**
-* isolated/unisolated improvement
+* isolated/unisolated improvement in scan endpoint and cancel scan endpoint
