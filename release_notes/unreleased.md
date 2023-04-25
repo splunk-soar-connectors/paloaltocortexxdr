@@ -1,2 +1,2 @@
 **Unreleased**
-* isolated/unisolated improvement in scan endpoint and cancel scan endpoint
+* Improved the behaviour of isolated/unisolated parameter in following actions 'scan endpoint' and 'cancel scan endpoint'
