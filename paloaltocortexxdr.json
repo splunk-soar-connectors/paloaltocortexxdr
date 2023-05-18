@@ -12,11 +12,11 @@
     "product_version_regex": ".*",
     "publisher": "Cyberforce Limited",
     "license": "Copyright (c) Cyberforce Limited, 2021-2023",
-    "app_version": "1.1.0",
+    "app_version": "1.2.0",
     "utctime_updated": "2022-01-07T22:06:49.000000Z",
     "package_name": "phantom_paloaltocortexxdr",
     "main_module": "paloaltocortexxdr_connector.py",
-    "min_phantom_version": "5.4.0",
+    "min_phantom_version": "5.5.0",
     "app_wizard_version": "1.0.0",
     "configuration": {
         "api_key": {
@@ -1962,7 +1962,7 @@
             },
             {
                 "module": "certifi",
-                "input_file": "wheels/py3/certifi-2022.12.7-py3-none-any.whl"
+                "input_file": "wheels/py3/certifi-2023.5.7-py3-none-any.whl"
             },
             {
                 "module": "chardet",
@@ -1994,7 +1994,7 @@
             },
             {
                 "module": "certifi",
-                "input_file": "wheels/py3/certifi-2022.12.7-py3-none-any.whl"
+                "input_file": "wheels/py3/certifi-2023.5.7-py3-none-any.whl"
             },
             {
                 "module": "chardet",
