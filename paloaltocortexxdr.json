@@ -12,7 +12,7 @@
     "product_version_regex": ".*",
     "publisher": "Cyberforce Limited",
     "license": "Copyright (c) Cyberforce Limited, 2021-2023",
-    "app_version": "1.1.0",
+    "app_version": "1.2.0",
     "utctime_updated": "2022-01-07T22:06:49.000000Z",
     "package_name": "phantom_paloaltocortexxdr",
     "main_module": "paloaltocortexxdr_connector.py",
@@ -1962,7 +1962,7 @@
             },
             {
                 "module": "certifi",
-                "input_file": "wheels/py3/certifi-2022.12.7-py3-none-any.whl"
+                "input_file": "wheels/py3/certifi-2023.5.7-py3-none-any.whl"
             },
             {
                 "module": "chardet",
@@ -1982,7 +1982,7 @@
             },
             {
                 "module": "urllib3",
-                "input_file": "wheels/shared/urllib3-1.26.15-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/urllib3-1.26.16-py2.py3-none-any.whl"
             }
         ]
     },
@@ -1994,19 +1994,19 @@
             },
             {
                 "module": "certifi",
-                "input_file": "wheels/py3/certifi-2022.12.7-py3-none-any.whl"
+                "input_file": "wheels/py3/certifi-2023.5.7-py3-none-any.whl"
             },
             {
-                "module": "chardet",
-                "input_file": "wheels/shared/chardet-3.0.4-py2.py3-none-any.whl"
+                "module": "charset_normalizer",
+                "input_file": "wheels/py39/charset_normalizer-3.1.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
             },
             {
                 "module": "idna",
-                "input_file": "wheels/shared/idna-2.10-py2.py3-none-any.whl"
+                "input_file": "wheels/py3/idna-3.4-py3-none-any.whl"
             },
             {
                 "module": "requests",
-                "input_file": "wheels/shared/requests-2.25.0-py2.py3-none-any.whl"
+                "input_file": "wheels/py3/requests-2.31.0-py3-none-any.whl"
             },
             {
                 "module": "soupsieve",
@@ -2014,7 +2014,7 @@
             },
             {
                 "module": "urllib3",
-                "input_file": "wheels/shared/urllib3-1.26.15-py2.py3-none-any.whl"
+                "input_file": "wheels/py3/urllib3-2.0.2-py3-none-any.whl"
             }
         ]
     }
