@@ -2,7 +2,7 @@
 # Palo Alto Cortex XDR
 
 Publisher: Cyberforce Limited  
-Connector Version: 1.1.0  
+Connector Version: 1.2.0  
 Product Vendor: Palo Alto  
 Product Name: Cortex XDR  
 Product Version Supported (regex): ".\*"  
