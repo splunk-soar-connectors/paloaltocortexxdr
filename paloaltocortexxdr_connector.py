@@ -1,6 +1,6 @@
 # File: paloaltocortexxdr_connector.py
 #
-# Copyright (c) Cyberforce Limited, 2021-2023
+# Copyright (c) Cyberforce Limited, 2021-2025
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
 # and limitations under the License.
 
 # Python 3 Compatibility imports
-from __future__ import print_function, unicode_literals
 
 import hashlib
 import json
@@ -34,17 +33,14 @@ from paloaltocortexxdr_consts import *
 
 
 class RetVal(tuple):
-
     def __new__(cls, val1, val2=None):
         return tuple.__new__(RetVal, (val1, val2))
 
 
 class TestConnector(BaseConnector):
-
     def __init__(self):
-
         # Call the BaseConnectors init first
-        super(TestConnector, self).__init__()
+        super().__init__()
 
         self._state = None
 
@@ -57,7 +53,7 @@ class TestConnector(BaseConnector):
         self._api_key_id = None
 
     def _get_error_message_from_exception(self, e):
-        """ This method is used to get appropriate error messages from the exception.
+        """This method is used to get appropriate error messages from the exception.
         :param e: Exception object
         :return: error message
         """
@@ -79,9 +75,9 @@ class TestConnector(BaseConnector):
 
         try:
             if err_code in ERR_CODE_MSG:
-                err_text = "Error Message: {0}".format(err_msg)
+                err_text = f"Error Message: {err_msg}"
             else:
-                err_text = "Error Code: {0}. Error Message: {1}".format(err_code, err_msg)
+                err_text = f"Error Code: {err_code}. Error Message: {err_msg}"
         except:
             self.debug_print(PARSE_ERR_MSG)
             err_text = PARSE_ERR_MSG
@@ -108,9 +104,8 @@ class TestConnector(BaseConnector):
             return RetVal(phantom.APP_SUCCESS, {})
 
         return RetVal(
-            action_result.set_status(
-                phantom.APP_ERROR, "Status code: {0}. Empty response and no information in the header".format(response.status_code)
-            ), None
+            action_result.set_status(phantom.APP_ERROR, f"Status code: {response.status_code}. Empty response and no information in the header"),
+            None,
         )
 
     def _process_html_response(self, response, action_result):
@@ -120,17 +115,17 @@ class TestConnector(BaseConnector):
         try:
             soup = BeautifulSoup(response.text, "html.parser")
             for element in soup(["script", "style", "footer", "nav"]):
-               element.extract()
+                element.extract()
             error_text = soup.text
-            split_lines = error_text.split('\n')
+            split_lines = error_text.split("\n")
             split_lines = [x.strip() for x in split_lines if x.strip()]
-            error_text = '\n'.join(split_lines)
+            error_text = "\n".join(split_lines)
         except:
             error_text = "Cannot parse error details"
 
-        message = "Status Code: {0}. Data from server:\n{1}\n".format(status_code, error_text)
+        message = f"Status Code: {status_code}. Data from server:\n{error_text}\n"
 
-        message = message.replace('{', '{{').replace('}', '}}')
+        message = message.replace("{", "{{").replace("}", "}}")
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
     def _process_json_response(self, r, action_result):
@@ -139,7 +134,7 @@ class TestConnector(BaseConnector):
             resp_json = r.json()
         except Exception as e:
             err = self._get_error_message_from_exception(e)
-            error_message = "Unable to parse JSON response. Error: {0}".format(err)
+            error_message = f"Unable to parse JSON response. Error: {err}"
             return RetVal(action_result.set_status(phantom.APP_ERROR, error_message), None)
 
         # Please specify the status codes here
@@ -147,30 +142,29 @@ class TestConnector(BaseConnector):
             return RetVal(phantom.APP_SUCCESS, resp_json)
 
         # You should process the error returned in the json
-        error_message = r.text.replace('{', '{{').replace('}', '}}')
-        message = "Error from server. Status Code: {0} Data from server: {1}".format(
-            r.status_code, error_message)
+        error_message = r.text.replace("{", "{{").replace("}", "}}")
+        message = f"Error from server. Status Code: {r.status_code} Data from server: {error_message}"
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
     def _process_response(self, r, action_result):
         # store the r_text in debug data, it will get dumped in the logs if the action fails
-        if hasattr(action_result, 'add_debug_data'):
-            action_result.add_debug_data({'r_status_code': r.status_code})
-            action_result.add_debug_data({'r_text': r.text})
-            action_result.add_debug_data({'r_headers': r.headers})
+        if hasattr(action_result, "add_debug_data"):
+            action_result.add_debug_data({"r_status_code": r.status_code})
+            action_result.add_debug_data({"r_text": r.text})
+            action_result.add_debug_data({"r_headers": r.headers})
 
         # Process each 'Content-Type' of response separately
 
         # Process a json response
-        if 'json' in r.headers.get('Content-Type', ''):
+        if "json" in r.headers.get("Content-Type", ""):
             return self._process_json_response(r, action_result)
 
         # Process an HTML response, Do this no matter what the api talks.
         # There is a high chance of a PROXY in between phantom and the rest of
         # world, in case of errors, PROXY's return HTML, this function parses
         # the error and adds it to the action_result.
-        if 'html' in r.headers.get('Content-Type', ''):
+        if "html" in r.headers.get("Content-Type", ""):
             return self._process_html_response(r, action_result)
 
         # it's not content-type that is to be parsed, handle an empty response
@@ -178,9 +172,8 @@ class TestConnector(BaseConnector):
             return self._process_empty_response(r, action_result)
 
         # everything else is actually an error at this point
-        message = "Can't process response from server. Status Code: {0} Data from server: {1}".format(
-            r.status_code,
-            r.text.replace('{', '{{').replace('}', '}}')
+        message = "Can't process response from server. Status Code: {} Data from server: {}".format(
+            r.status_code, r.text.replace("{", "{{").replace("}", "}}")
         )
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
@@ -192,45 +185,37 @@ class TestConnector(BaseConnector):
         try:
             request_func = getattr(requests, method)
         except AttributeError:
-            return RetVal(
-                action_result.set_status(phantom.APP_ERROR, "Invalid method: {0}".format(method)),
-                resp_json
-            )
+            return RetVal(action_result.set_status(phantom.APP_ERROR, f"Invalid method: {method}"), resp_json)
 
         # Create a URL to connect to
-        url = "{0}{1}".format(self._base_url, endpoint)
+        url = f"{self._base_url}{endpoint}"
 
         try:
-            r = request_func(
-                url,
-                verify=self._verify,
-                **kwargs
-            )
+            r = request_func(url, verify=self._verify, **kwargs)
         except requests.exceptions.InvalidURL:
-            error_message = "Error connecting to server. Invalid URL %s" % (url)
+            error_message = f"Error connecting to server. Invalid URL {url}"
             return RetVal(action_result.set_status(phantom.APP_ERROR, error_message), resp_json)
         except requests.exceptions.ConnectionError:
-            error_message = "Error connecting to server. Connection Refused from the Server for %s" % (url)
+            error_message = f"Error connecting to server. Connection Refused from the Server for {url}"
             return RetVal(action_result.set_status(phantom.APP_ERROR, error_message), resp_json)
         except requests.exceptions.InvalidSchema:
-            error_message = "Error connecting to server. No connection adapters were found for %s" % (url)
+            error_message = f"Error connecting to server. No connection adapters were found for {url}"
             return RetVal(action_result.set_status(phantom.APP_ERROR, error_message), resp_json)
         except Exception as e:
             err = self._get_error_message_from_exception(e)
-            error_message = "Error Connecting to server. {0}".format(err)
+            error_message = f"Error Connecting to server. {err}"
             return RetVal(action_result.set_status(phantom.APP_ERROR, error_message), resp_json)
 
         return self._process_response(r, action_result)
 
     def authenticationHeaders(self):
-
         if self._advanced:
             # Generate a 64 bytes random string
             nonce = "".join(secrets.choice(string.ascii_letters + string.digits) for _ in range(64))
             # Get the current timestamp as milliseconds
             timestamp = int(datetime.now(timezone.utc).timestamp()) * 1000
             # Generate the auth key
-            auth_key = "%s%s%s" % (self._api_key, nonce, timestamp)
+            auth_key = f"{self._api_key}{nonce}{timestamp}"
             # Convert to bytes object
             auth_key = auth_key.encode("utf-8")
             # Calculate sha256
@@ -239,13 +224,10 @@ class TestConnector(BaseConnector):
                 "x-xdr-timestamp": str(timestamp),
                 "x-xdr-nonce": nonce,
                 "x-xdr-auth-id": str(self._api_key_id),
-                "Authorization": api_key_hash
+                "Authorization": api_key_hash,
             }
         else:
-            headers = {
-                "x-xdr-auth-id": str(self._api_key_id),
-                "Authorization": self._api_key
-            }
+            headers = {"x-xdr-auth-id": str(self._api_key_id), "Authorization": self._api_key}
 
         return headers
 
@@ -271,9 +253,7 @@ class TestConnector(BaseConnector):
 
             # make rest call
             headers = self.authenticationHeaders()
-            ret_val, response = self._make_rest_call(
-                '/incidents/get_incidents/', action_result, headers=headers, json=parameters
-            )
+            ret_val, response = self._make_rest_call("/incidents/get_incidents/", action_result, headers=headers, json=parameters)
 
             if phantom.is_fail(ret_val):
                 # the call to the 3rd party device or service failed, action result should contain all the error details
@@ -292,7 +272,7 @@ class TestConnector(BaseConnector):
 
         for incident in incidents:
             cef, container = {}, {}
-            container["name"] = "Cortex XDR Incident {0}".format(incident["incident_id"])
+            container["name"] = "Cortex XDR Incident {}".format(incident["incident_id"])
             container["description"] = "Cortex XDR Incident"
 
             first_cef = True
@@ -310,12 +290,12 @@ class TestConnector(BaseConnector):
 
             status, message, container_id = self.save_container(container)
             if status == phantom.APP_ERROR:
-                self.debug_print("Failed to store: {0}".format(message))
-                self.debug_print("stat/msg {0}/{1}".format(status, message))
-                return action_result.set_status(phantom.APP_ERROR, "Container creation failed: {0}".format(message))
+                self.debug_print(f"Failed to store: {message}")
+                self.debug_print(f"stat/msg {status}/{message}")
+                return action_result.set_status(phantom.APP_ERROR, f"Container creation failed: {message}")
 
         # Return success
-        self.save_progress("{0} incident(s) polled".format(polled_count))
+        self.save_progress(f"{polled_count} incident(s) polled")
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_test_connectivity(self, param):
@@ -327,9 +307,7 @@ class TestConnector(BaseConnector):
         # make rest call
         headers = self.authenticationHeaders()
         parameters = {}
-        ret_val, response = self._make_rest_call(
-            '/endpoints/get_endpoints/', action_result, headers=headers, json=parameters
-        )
+        ret_val, response = self._make_rest_call("/endpoints/get_endpoints/", action_result, headers=headers, json=parameters)
 
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
@@ -342,19 +320,17 @@ class TestConnector(BaseConnector):
 
     def _handle_list_endpoints(self, param):
         # use self.save_progress(...) to send progress messages back to the platform
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         # Add an action result object to self (BaseConnector) to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
 
         parameters = {}
-        self.save_progress("Request JSON: {0}".format(parameters))
+        self.save_progress(f"Request JSON: {parameters}")
 
         # make rest call
         headers = self.authenticationHeaders()
-        ret_val, response = self._make_rest_call(
-            '/endpoints/get_endpoints/', action_result, headers=headers, json=parameters
-        )
+        ret_val, response = self._make_rest_call("/endpoints/get_endpoints/", action_result, headers=headers, json=parameters)
 
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
@@ -362,7 +338,7 @@ class TestConnector(BaseConnector):
 
         # Add the response into the data section
         action_result.add_data(response)
-        self.save_progress("Response JSON: {0}".format(response))
+        self.save_progress(f"Response JSON: {response}")
 
         try:
             # Add a dictionary that is made up of the most important values from data into the summary
@@ -370,7 +346,7 @@ class TestConnector(BaseConnector):
             reply = response["reply"]
             summary["endpoint_count"] = str(len(reply))
             for x in range(len(reply)):
-                summary["endpoint_{0}".format(x + 1)] = reply[x]
+                summary[f"endpoint_{x + 1}"] = reply[x]
             summary["raw"] = response
         except Exception:
             self.debug_print(ERR_PARSING_RESPONSE)
@@ -381,7 +357,7 @@ class TestConnector(BaseConnector):
 
     def _handle_get_policy(self, param):
         # use self.save_progress(...) to send progress messages back to the platform
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         # Add an action result object to self (BaseConnector) to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
@@ -392,13 +368,11 @@ class TestConnector(BaseConnector):
         request_data, parameters = {}, {}
         request_data["endpoint_id"] = endpoint_id
         parameters["request_data"] = request_data
-        self.save_progress("Request JSON: {0}".format(parameters))
+        self.save_progress(f"Request JSON: {parameters}")
 
         # make rest call
         headers = self.authenticationHeaders()
-        ret_val, response = self._make_rest_call(
-            '/endpoints/get_policy/', action_result, headers=headers, json=parameters
-        )
+        ret_val, response = self._make_rest_call("/endpoints/get_policy/", action_result, headers=headers, json=parameters)
 
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
@@ -406,7 +380,7 @@ class TestConnector(BaseConnector):
 
         # Add the response into the data section
         action_result.add_data(response)
-        self.save_progress("Response JSON: {0}".format(response))
+        self.save_progress(f"Response JSON: {response}")
 
         try:
             # Add a dictionary that is made up of the most important values from data into the summary
@@ -423,7 +397,7 @@ class TestConnector(BaseConnector):
 
     def _handle_get_action_status(self, param):
         # use self.save_progress(...) to send progress messages back to the platform
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         # Add an action result object to self (BaseConnector) to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
@@ -438,13 +412,11 @@ class TestConnector(BaseConnector):
         request_data, parameters = {}, {}
         request_data["group_action_id"] = action_id
         parameters["request_data"] = request_data
-        self.save_progress("Request JSON: {0}".format(parameters))
+        self.save_progress(f"Request JSON: {parameters}")
 
         # make rest call
         headers = self.authenticationHeaders()
-        ret_val, response = self._make_rest_call(
-            '/actions/get_action_status/', action_result, headers=headers, json=parameters
-        )
+        ret_val, response = self._make_rest_call("/actions/get_action_status/", action_result, headers=headers, json=parameters)
 
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
@@ -452,7 +424,7 @@ class TestConnector(BaseConnector):
 
         # Add the response into the data section
         action_result.add_data(response)
-        self.save_progress("Response JSON: {0}".format(response))
+        self.save_progress(f"Response JSON: {response}")
 
         try:
             # Add a dictionary that is made up of the most important values from data into the summary
@@ -469,7 +441,7 @@ class TestConnector(BaseConnector):
 
     def _handle_retrieve_file(self, param):
         # use self.save_progress(...) to send progress messages back to the platform
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         # Add an action result object to self (BaseConnector) to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
@@ -504,13 +476,11 @@ class TestConnector(BaseConnector):
             return action_result.set_status(phantom.APP_ERROR, "Please provide at least one file path")
         request_data["files"] = files
         parameters["request_data"] = request_data
-        self.save_progress("Request JSON: {0}".format(parameters))
+        self.save_progress(f"Request JSON: {parameters}")
 
         # make rest call
         headers = self.authenticationHeaders()
-        ret_val, response = self._make_rest_call(
-            '/endpoints/file_retrieval/', action_result, headers=headers, json=parameters
-        )
+        ret_val, response = self._make_rest_call("/endpoints/file_retrieval/", action_result, headers=headers, json=parameters)
 
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
@@ -518,7 +488,7 @@ class TestConnector(BaseConnector):
 
         # Add the response into the data section
         action_result.add_data(response)
-        self.save_progress("Response JSON: {0}".format(response))
+        self.save_progress(f"Response JSON: {response}")
 
         try:
             # Add a dictionary that is made up of the most important values from data into the summary
@@ -535,7 +505,7 @@ class TestConnector(BaseConnector):
 
     def _handle_retrieve_file_details(self, param):
         # use self.save_progress(...) to send progress messages back to the platform
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         # Add an action result object to self (BaseConnector) to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
@@ -550,13 +520,11 @@ class TestConnector(BaseConnector):
         request_data, parameters = {}, {}
         request_data["group_action_id"] = action_id
         parameters["request_data"] = request_data
-        self.save_progress("Request JSON: {0}".format(parameters))
+        self.save_progress(f"Request JSON: {parameters}")
 
         # make rest call
         headers = self.authenticationHeaders()
-        ret_val, response = self._make_rest_call(
-            '/actions/file_retrieval_details/', action_result, headers=headers, json=parameters
-        )
+        ret_val, response = self._make_rest_call("/actions/file_retrieval_details/", action_result, headers=headers, json=parameters)
 
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
@@ -564,7 +532,7 @@ class TestConnector(BaseConnector):
 
         # Add the response into the data section
         action_result.add_data(response)
-        self.save_progress("Response JSON: {0}".format(response))
+        self.save_progress(f"Response JSON: {response}")
 
         try:
             # Add a dictionary that is made up of the most important values from data into the summary
@@ -581,7 +549,7 @@ class TestConnector(BaseConnector):
 
     def _handle_quarantine_file(self, param):
         # use self.save_progress(...) to send progress messages back to the platform
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         # Add an action result object to self (BaseConnector) to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
@@ -602,13 +570,11 @@ class TestConnector(BaseConnector):
         request_data["file_path"] = file_path
         request_data["file_hash"] = file_hash
         parameters["request_data"] = request_data
-        self.save_progress("Request JSON: {0}".format(parameters))
+        self.save_progress(f"Request JSON: {parameters}")
 
         # make rest call
         headers = self.authenticationHeaders()
-        ret_val, response = self._make_rest_call(
-            '/endpoints/quarantine/', action_result, headers=headers, json=parameters
-        )
+        ret_val, response = self._make_rest_call("/endpoints/quarantine/", action_result, headers=headers, json=parameters)
 
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
@@ -616,7 +582,7 @@ class TestConnector(BaseConnector):
 
         # Add the response into the data section
         action_result.add_data(response)
-        self.save_progress("Response JSON: {0}".format(response))
+        self.save_progress(f"Response JSON: {response}")
 
         try:
             # Add a dictionary that is made up of the most important values from data into the summary
@@ -633,7 +599,7 @@ class TestConnector(BaseConnector):
 
     def _handle_unquarantine_file(self, param):
         # use self.save_progress(...) to send progress messages back to the platform
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         # Add an action result object to self (BaseConnector) to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
@@ -646,13 +612,11 @@ class TestConnector(BaseConnector):
         request_data["file_hash"] = file_hash
         request_data["endpoint_id"] = endpoint_id
         parameters["request_data"] = request_data
-        self.save_progress("Request JSON: {0}".format(parameters))
+        self.save_progress(f"Request JSON: {parameters}")
 
         # make rest call
         headers = self.authenticationHeaders()
-        ret_val, response = self._make_rest_call(
-            '/endpoints/restore/', action_result, headers=headers, json=parameters
-        )
+        ret_val, response = self._make_rest_call("/endpoints/restore/", action_result, headers=headers, json=parameters)
 
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
@@ -660,7 +624,7 @@ class TestConnector(BaseConnector):
 
         # Add the response into the data section
         action_result.add_data(response)
-        self.save_progress("Response JSON: {0}".format(response))
+        self.save_progress(f"Response JSON: {response}")
 
         try:
             # Add a dictionary that is made up of the most important values from data into the summary
@@ -677,7 +641,7 @@ class TestConnector(BaseConnector):
 
     def _handle_block_hash(self, param):
         # use self.save_progress(...) to send progress messages back to the platform
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         # Add an action result object to self (BaseConnector) to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
@@ -699,13 +663,11 @@ class TestConnector(BaseConnector):
             request_data["incident_id"] = str(incident_id)
 
         parameters["request_data"] = request_data
-        self.save_progress("Request JSON: {0}".format(parameters))
+        self.save_progress(f"Request JSON: {parameters}")
 
         # make rest call
         headers = self.authenticationHeaders()
-        ret_val, response = self._make_rest_call(
-            '/hash_exceptions/blocklist/', action_result, headers=headers, json=parameters
-        )
+        ret_val, response = self._make_rest_call("/hash_exceptions/blocklist/", action_result, headers=headers, json=parameters)
 
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
@@ -713,7 +675,7 @@ class TestConnector(BaseConnector):
 
         # Add the response into the data section
         action_result.add_data(response)
-        self.save_progress("Response JSON: {0}".format(response))
+        self.save_progress(f"Response JSON: {response}")
 
         try:
             # Add a dictionary that is made up of the most important values from data into the summary
@@ -729,7 +691,7 @@ class TestConnector(BaseConnector):
 
     def _handle_allow_hash(self, param):
         # use self.save_progress(...) to send progress messages back to the platform
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         # Add an action result object to self (BaseConnector) to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
@@ -751,13 +713,11 @@ class TestConnector(BaseConnector):
             request_data["incident_id"] = str(incident_id)
 
         parameters["request_data"] = request_data
-        self.save_progress("Request JSON: {0}".format(parameters))
+        self.save_progress(f"Request JSON: {parameters}")
 
         # make rest call
         headers = self.authenticationHeaders()
-        ret_val, response = self._make_rest_call(
-            '/hash_exceptions/allowlist/', action_result, headers=headers, json=parameters
-        )
+        ret_val, response = self._make_rest_call("/hash_exceptions/allowlist/", action_result, headers=headers, json=parameters)
 
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
@@ -765,7 +725,7 @@ class TestConnector(BaseConnector):
 
         # Add the response into the data section
         action_result.add_data(response)
-        self.save_progress("Response JSON: {0}".format(response))
+        self.save_progress(f"Response JSON: {response}")
 
         try:
             # Add a dictionary that is made up of the most important values from data into the summary
@@ -781,7 +741,7 @@ class TestConnector(BaseConnector):
 
     def _handle_quarantine_device(self, param):
         # use self.save_progress(...) to send progress messages back to the platform
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         # Add an action result object to self (BaseConnector) to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
@@ -792,13 +752,11 @@ class TestConnector(BaseConnector):
         request_data, parameters = {}, {}
         request_data["endpoint_id"] = endpoint_id
         parameters["request_data"] = request_data
-        self.save_progress("Request JSON: {0}".format(parameters))
+        self.save_progress(f"Request JSON: {parameters}")
 
         # make rest call
         headers = self.authenticationHeaders()
-        ret_val, response = self._make_rest_call(
-            '/endpoints/isolate/', action_result, headers=headers, json=parameters
-        )
+        ret_val, response = self._make_rest_call("/endpoints/isolate/", action_result, headers=headers, json=parameters)
 
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
@@ -806,7 +764,7 @@ class TestConnector(BaseConnector):
 
         # Add the response into the data section
         action_result.add_data(response)
-        self.save_progress("Response JSON: {0}".format(response))
+        self.save_progress(f"Response JSON: {response}")
 
         try:
             # Add a dictionary that is made up of the most important values from data into the summary
@@ -823,7 +781,7 @@ class TestConnector(BaseConnector):
 
     def _handle_unquarantine_device(self, param):
         # use self.save_progress(...) to send progress messages back to the platform
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         # Add an action result object to self (BaseConnector) to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
@@ -834,13 +792,11 @@ class TestConnector(BaseConnector):
         request_data, parameters = {}, {}
         request_data["endpoint_id"] = endpoint_id
         parameters["request_data"] = request_data
-        self.save_progress("Request JSON: {0}".format(parameters))
+        self.save_progress(f"Request JSON: {parameters}")
 
         # make rest call
         headers = self.authenticationHeaders()
-        ret_val, response = self._make_rest_call(
-            '/endpoints/unisolate/', action_result, headers=headers, json=parameters
-        )
+        ret_val, response = self._make_rest_call("/endpoints/unisolate/", action_result, headers=headers, json=parameters)
 
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
@@ -848,7 +804,7 @@ class TestConnector(BaseConnector):
 
         # Add the response into the data section
         action_result.add_data(response)
-        self.save_progress("Response JSON: {0}".format(response))
+        self.save_progress(f"Response JSON: {response}")
 
         try:
             # Add a dictionary that is made up of the most important values from data into the summary
@@ -865,7 +821,7 @@ class TestConnector(BaseConnector):
 
     def _handle_scan_endpoint(self, param):
         # use self.save_progress(...) to send progress messages back to the platform
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         # Add an action result object to self (BaseConnector) to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
@@ -1001,13 +957,11 @@ class TestConnector(BaseConnector):
             request_data["filters"] = filters
 
         parameters["request_data"] = request_data
-        self.save_progress("Request JSON: {0}".format(parameters))
+        self.save_progress(f"Request JSON: {parameters}")
 
         # make rest call
         headers = self.authenticationHeaders()
-        ret_val, response = self._make_rest_call(
-            '/endpoints/scan/', action_result, headers=headers, json=parameters
-        )
+        ret_val, response = self._make_rest_call("/endpoints/scan/", action_result, headers=headers, json=parameters)
 
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
@@ -1015,7 +969,7 @@ class TestConnector(BaseConnector):
 
         # Add the response into the data section
         action_result.add_data(response)
-        self.save_progress("Response JSON: {0}".format(response))
+        self.save_progress(f"Response JSON: {response}")
 
         try:
             # Add a dictionary that is made up of the most important values from data into the summary
@@ -1033,7 +987,7 @@ class TestConnector(BaseConnector):
 
     def _handle_cancel_scan_endpoint(self, param):
         # use self.save_progress(...) to send progress messages back to the platform
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         # Add an action result object to self (BaseConnector) to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
@@ -1169,13 +1123,11 @@ class TestConnector(BaseConnector):
             request_data["filters"] = filters
 
         parameters["request_data"] = request_data
-        self.save_progress("Request JSON: {0}".format(parameters))
+        self.save_progress(f"Request JSON: {parameters}")
 
         # make rest call
         headers = self.authenticationHeaders()
-        ret_val, response = self._make_rest_call(
-            '/endpoints/abort_scan/', action_result, headers=headers, json=parameters
-        )
+        ret_val, response = self._make_rest_call("/endpoints/abort_scan/", action_result, headers=headers, json=parameters)
 
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
@@ -1183,7 +1135,7 @@ class TestConnector(BaseConnector):
 
         # Add the response into the data section
         action_result.add_data(response)
-        self.save_progress("Response JSON: {0}".format(response))
+        self.save_progress(f"Response JSON: {response}")
 
         try:
             # Add a dictionary that is made up of the most important values from data into the summary
@@ -1201,7 +1153,7 @@ class TestConnector(BaseConnector):
 
     def _handle_get_incidents(self, param):
         # use self.save_progress(...) to send progress messages back to the platform
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         # Add an action result object to self (BaseConnector) to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
@@ -1270,8 +1222,15 @@ class TestConnector(BaseConnector):
             obj["value"] = sources
             filters.append(obj)
         if status:
-            statuses = ["new", "under_investigation", "resolved_threat_handled", "resolved_known_issue",
-                        "resolved_false_positive", "resolved_other", "resolved_auto"]
+            statuses = [
+                "new",
+                "under_investigation",
+                "resolved_threat_handled",
+                "resolved_known_issue",
+                "resolved_false_positive",
+                "resolved_other",
+                "resolved_auto",
+            ]
             if any(value == status for value in statuses):
                 obj = {}
                 obj["field"] = "status"
@@ -1307,13 +1266,11 @@ class TestConnector(BaseConnector):
             else:
                 return action_result.set_status(phantom.APP_ERROR, VALID_VALUE_MSG.format(key=SORTFIELD_ACTION_PARAM))
         parameters["request_data"] = request_data
-        self.save_progress("Request JSON: {0}".format(parameters))
+        self.save_progress(f"Request JSON: {parameters}")
 
         # make rest call
         headers = self.authenticationHeaders()
-        ret_val, response = self._make_rest_call(
-            '/incidents/get_incidents/', action_result, headers=headers, json=parameters
-        )
+        ret_val, response = self._make_rest_call("/incidents/get_incidents/", action_result, headers=headers, json=parameters)
 
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
@@ -1321,7 +1278,7 @@ class TestConnector(BaseConnector):
 
         # Add the response into the data section
         action_result.add_data(response)
-        self.save_progress("Response JSON: {0}".format(response))
+        self.save_progress(f"Response JSON: {response}")
 
         try:
             # Add a dictionary that is made up of the most important values from data into the summary
@@ -1331,7 +1288,7 @@ class TestConnector(BaseConnector):
             summary["result_count"] = reply["result_count"]
             incidents = reply["incidents"]
             for x in range(len(incidents)):
-                summary["result_{0}".format(x + 1)] = incidents[x]
+                summary[f"result_{x + 1}"] = incidents[x]
             summary["raw"] = response
         except Exception:
             self.debug_print(ERR_PARSING_RESPONSE)
@@ -1342,7 +1299,7 @@ class TestConnector(BaseConnector):
 
     def _handle_get_incident_details(self, param):
         # use self.save_progress(...) to send progress messages back to the platform
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         # Add an action result object to self (BaseConnector) to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
@@ -1364,13 +1321,11 @@ class TestConnector(BaseConnector):
                 return action_result.get_status()
             request_data["alerts_limit"] = alerts_limit
         parameters["request_data"] = request_data
-        self.save_progress("Request JSON: {0}".format(parameters))
+        self.save_progress(f"Request JSON: {parameters}")
 
         # make rest call
         headers = self.authenticationHeaders()
-        ret_val, response = self._make_rest_call(
-            '/incidents/get_incident_extra_data/', action_result, headers=headers, json=parameters
-        )
+        ret_val, response = self._make_rest_call("/incidents/get_incident_extra_data/", action_result, headers=headers, json=parameters)
 
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
@@ -1378,7 +1333,7 @@ class TestConnector(BaseConnector):
 
         # Add the response into the data section
         action_result.add_data(response)
-        self.save_progress("Response JSON: {0}".format(response))
+        self.save_progress(f"Response JSON: {response}")
 
         try:
             # Add a dictionary that is made up of the most important values from data into the summary
@@ -1398,7 +1353,7 @@ class TestConnector(BaseConnector):
 
     def _handle_get_alerts(self, param):
         # use self.save_progress(...) to send progress messages back to the platform
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         # Add an action result object to self (BaseConnector) to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
@@ -1485,13 +1440,11 @@ class TestConnector(BaseConnector):
             else:
                 return action_result.set_status(phantom.APP_ERROR, VALID_VALUE_MSG.format(key=SORTFIELD_ACTION_PARAM))
         parameters["request_data"] = request_data
-        self.save_progress("Request JSON: {0}".format(parameters))
+        self.save_progress(f"Request JSON: {parameters}")
 
         # make rest call
         headers = self.authenticationHeaders()
-        ret_val, response = self._make_rest_call(
-            '/alerts/get_alerts_multi_events/', action_result, headers=headers, json=parameters
-        )
+        ret_val, response = self._make_rest_call("/alerts/get_alerts_multi_events/", action_result, headers=headers, json=parameters)
 
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
@@ -1499,7 +1452,7 @@ class TestConnector(BaseConnector):
 
         # Add the response into the data section
         action_result.add_data(response)
-        self.save_progress("Response JSON: {0}".format(response))
+        self.save_progress(f"Response JSON: {response}")
 
         try:
             # Add a dictionary that is made up of the most important values from data into the summary
@@ -1516,7 +1469,7 @@ class TestConnector(BaseConnector):
             summary["host_name"] = alerts[0]["host_name"]
             summary["ip_address"] = alerts[0]["host_ip"]
             for x in range(len(alerts)):
-                summary["Result {0}".format(x + 1)] = alerts[x]
+                summary[f"Result {x + 1}"] = alerts[x]
             summary["raw"] = response
         except Exception:
             self.debug_print(ERR_PARSING_RESPONSE)
@@ -1533,58 +1486,58 @@ class TestConnector(BaseConnector):
 
         self.debug_print("action_id", self.get_action_identifier())
 
-        if action_id == 'on_poll':
+        if action_id == "on_poll":
             ret_val = self._handle_on_poll(param)
 
-        elif action_id == 'test_connectivity':
+        elif action_id == "test_connectivity":
             ret_val = self._handle_test_connectivity(param)
 
-        elif action_id == 'list_endpoints':
+        elif action_id == "list_endpoints":
             ret_val = self._handle_list_endpoints(param)
 
-        elif action_id == 'get_policy':
+        elif action_id == "get_policy":
             ret_val = self._handle_get_policy(param)
 
-        elif action_id == 'get_action_status':
+        elif action_id == "get_action_status":
             ret_val = self._handle_get_action_status(param)
 
-        elif action_id == 'retrieve_file':
+        elif action_id == "retrieve_file":
             ret_val = self._handle_retrieve_file(param)
 
-        elif action_id == 'retrieve_file_details':
+        elif action_id == "retrieve_file_details":
             ret_val = self._handle_retrieve_file_details(param)
 
-        elif action_id == 'quarantine_file':
+        elif action_id == "quarantine_file":
             ret_val = self._handle_quarantine_file(param)
 
-        elif action_id == 'unquarantine_file':
+        elif action_id == "unquarantine_file":
             ret_val = self._handle_unquarantine_file(param)
 
-        elif action_id == 'block_hash':
+        elif action_id == "block_hash":
             ret_val = self._handle_block_hash(param)
 
-        elif action_id == 'allow_hash':
+        elif action_id == "allow_hash":
             ret_val = self._handle_allow_hash(param)
 
-        elif action_id == 'quarantine_device':
+        elif action_id == "quarantine_device":
             ret_val = self._handle_quarantine_device(param)
 
-        elif action_id == 'unquarantine_device':
+        elif action_id == "unquarantine_device":
             ret_val = self._handle_unquarantine_device(param)
 
-        elif action_id == 'scan_endpoint':
+        elif action_id == "scan_endpoint":
             ret_val = self._handle_scan_endpoint(param)
 
-        elif action_id == 'cancel_scan_endpoint':
+        elif action_id == "cancel_scan_endpoint":
             ret_val = self._handle_cancel_scan_endpoint(param)
 
-        elif action_id == 'get_incidents':
+        elif action_id == "get_incidents":
             ret_val = self._handle_get_incidents(param)
 
-        elif action_id == 'get_incident_details':
+        elif action_id == "get_incident_details":
             ret_val = self._handle_get_incident_details(param)
 
-        elif action_id == 'get_alerts':
+        elif action_id == "get_alerts":
             ret_val = self._handle_get_alerts(param)
 
         return ret_val
@@ -1597,11 +1550,11 @@ class TestConnector(BaseConnector):
         # get the asset config
         config = self.get_config()
 
-        self._base_url = "https://api-{0}/public_api/v1".format(config['fqdn'])
-        self._api_key = config['api_key']
-        self._advanced = config.get('advanced', False)
-        self._api_key_id = config['api_id']
-        self._verify = config.get('verify_server_cert', False)
+        self._base_url = "https://api-{}/public_api/v1".format(config["fqdn"])
+        self._api_key = config["api_key"]
+        self._advanced = config.get("advanced", False)
+        self._api_key_id = config["api_id"]
+        self._verify = config.get("verify_server_cert", False)
 
         return phantom.APP_SUCCESS
 
@@ -1621,10 +1574,10 @@ def main():
 
     argparser = argparse.ArgumentParser()
 
-    argparser.add_argument('input_test_json', help='Input Test JSON file')
-    argparser.add_argument('-u', '--username', help='username', required=False)
-    argparser.add_argument('-p', '--password', help='password', required=False)
-    argparser.add_argument('-v', '--verify', action='store_true', help='verify', required=False, default=False)
+    argparser.add_argument("input_test_json", help="Input Test JSON file")
+    argparser.add_argument("-u", "--username", help="username", required=False)
+    argparser.add_argument("-p", "--password", help="password", required=False)
+    argparser.add_argument("-v", "--verify", action="store_true", help="verify", required=False, default=False)
 
     args = argparser.parse_args()
     session_id = None
@@ -1634,31 +1587,31 @@ def main():
     verify = args.verify
 
     if username is not None and password is None:
-
         # User specified a username but not a password, so ask
         import getpass
+
         password = getpass.getpass("Password: ")
 
     if username and password:
         try:
-            login_url = BaseConnector._get_phantom_base_url() + '/login'
+            login_url = BaseConnector._get_phantom_base_url() + "/login"
 
             print("Accessing the Login page")
             r = requests.get(login_url, verify=verify)
-            csrftoken = r.cookies['csrftoken']
+            csrftoken = r.cookies["csrftoken"]
 
             data = dict()
-            data['username'] = username
-            data['password'] = password
-            data['csrfmiddlewaretoken'] = csrftoken
+            data["username"] = username
+            data["password"] = password
+            data["csrfmiddlewaretoken"] = csrftoken
 
             headers = dict()
-            headers['Cookie'] = 'csrftoken=' + csrftoken
-            headers['Referer'] = login_url
+            headers["Cookie"] = "csrftoken=" + csrftoken
+            headers["Referer"] = login_url
 
             print("Logging into Platform to get the session id")
             r2 = requests.post(login_url, verify=verify, data=data, headers=headers)
-            session_id = r2.cookies['sessionid']
+            session_id = r2.cookies["sessionid"]
         except Exception as e:
             print("Unable to get session id from the platform. Error: " + str(e))
             sys.exit(1)
@@ -1672,8 +1625,8 @@ def main():
         connector.print_progress_message = True
 
         if session_id is not None:
-            in_json['user_session_token'] = session_id
-            connector._set_csrf_info(csrftoken, headers['Referer'])
+            in_json["user_session_token"] = session_id
+            connector._set_csrf_info(csrftoken, headers["Referer"])
 
         ret_val = connector._handle_action(json.dumps(in_json), None)
         print(json.dumps(json.loads(ret_val), indent=4))
@@ -1681,5 +1634,5 @@ def main():
     sys.exit(0)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
