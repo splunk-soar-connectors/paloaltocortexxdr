@@ -1,16 +1,39 @@
 Splunk SOAR Palo Alto Cortex XDR
-Copyright (c) Cyberforce Limited, 2021-2023
+Copyright (c) Cyberforce Limited, 2021-2025
 
-Third-party Software Attributions:
+Third Party Software Attributions:
 
-Library: beautifulsoup4
+Name: beautifulsoup4
 Version: 4.9.1
+Author: Leonard Richardson
 License: MIT
-Copyright 2004-2017 Leonard Richardson
-Copyright 2004-2019 Leonard Richardson
-Copyright 2018 Isaac Muse
 
-Library: requests
-Version: 2.25.0
+Name: certifi
+Version: 2025.1.31
+Author: Kenneth Reitz
+License: MPL-2.0
+
+Name: charset-normalizer
+Version: 3.4.1
+Author:
+License: MIT
+
+Name: idna
+Version: 3.10
+Author:
+License:
+
+Name: requests
+Version: 2.31.0
+Author: Kenneth Reitz
 License: Apache 2.0
-Kenneth Reitz
+
+Name: soupsieve
+Version: 2.6
+Author:
+License:
+
+Name: urllib3
+Version: 2.3.0
+Author:
+License:
