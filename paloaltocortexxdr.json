@@ -42,6 +42,12 @@
             "data_type": "string",
             "required": true,
             "order": 3
+        },
+        "verify_server_cert": {
+            "description": "Verify server certificate",
+            "data_type": "boolean",
+            "default": true,
+            "order": 4
         }
     },
     "actions": [

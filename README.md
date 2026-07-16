@@ -18,6 +18,7 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 **advanced** | optional | boolean | Advanced Key |
 **api_id** | required | string | API Key ID |
 **fqdn** | required | string | FQDN |
+**verify_server_cert** | optional | boolean | Verify server certificate |
 
 ### Supported Actions
 

@@ -1554,7 +1554,7 @@ class TestConnector(BaseConnector):
         self._api_key = config["api_key"]
         self._advanced = config.get("advanced", False)
         self._api_key_id = config["api_id"]
-        self._verify = config.get("verify_server_cert", False)
+        self._verify = config.get("verify_server_cert", True)
 
         return phantom.APP_SUCCESS
 
