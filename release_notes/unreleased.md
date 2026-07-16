@@ -1,1 +1,3 @@
 **Unreleased**
+
+* Added TLS certificate verification and enabled it by default. (PAPP-37998)

@@ -1,6 +1,6 @@
 # File: paloaltocortexxdr_connector.py
 #
-# Copyright (c) Cyberforce Limited, 2021-2025
+# Copyright (c) Cyberforce Limited, 2021-2026
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -288,7 +288,7 @@ class TestConnector(BaseConnector):
                 container["data"] = incident
                 container["artifacts"] = artifacts
 
-            status, message, container_id = self.save_container(container)
+            status, message, _container_id = self.save_container(container)
             if status == phantom.APP_ERROR:
                 self.debug_print(f"Failed to store: {message}")
                 self.debug_print(f"stat/msg {status}/{message}")
@@ -307,7 +307,7 @@ class TestConnector(BaseConnector):
         # make rest call
         headers = self.authenticationHeaders()
         parameters = {}
-        ret_val, response = self._make_rest_call("/endpoints/get_endpoints/", action_result, headers=headers, json=parameters)
+        ret_val, _response = self._make_rest_call("/endpoints/get_endpoints/", action_result, headers=headers, json=parameters)
 
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
@@ -1554,7 +1554,7 @@ class TestConnector(BaseConnector):
         self._api_key = config["api_key"]
         self._advanced = config.get("advanced", False)
         self._api_key_id = config["api_id"]
-        self._verify = config.get("verify_server_cert", False)
+        self._verify = config.get("verify_server_cert", True)
 
         return phantom.APP_SUCCESS
 
