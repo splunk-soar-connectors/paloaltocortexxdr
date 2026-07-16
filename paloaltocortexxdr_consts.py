@@ -1,6 +1,6 @@
 # File: paloaltocortexxdr_consts.py
 #
-# Copyright (c) Cyberforce Limited, 2021-2025
+# Copyright (c) Cyberforce Limited, 2021-2026
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

@@ -1,9 +1,9 @@
 # Palo Alto Cortex XDR
 
-Publisher: Cyberforce Limited \
-Connector Version: 1.2.1 \
-Product Vendor: Palo Alto \
-Product Name: Cortex XDR \
+Publisher: Cyberforce Limited <br>
+Connector Version: 1.2.1 <br>
+Product Vendor: Palo Alto <br>
+Product Name: Cortex XDR <br>
 Minimum Product Version: 5.4.0
 
 This app integrates with the Palo Alto Cortex XDR
@@ -21,30 +21,30 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 
 ### Supported Actions
 
-[on poll](#action-on-poll) - Callback action for the on_poll ingest functionality \
-[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration \
-[list endpoints](#action-list-endpoints) - List all the endpoints/sensors configured on the device \
-[get policy](#action-get-policy) - Get the policy name for a specific endpoint \
-[get action status](#action-get-action-status) - Retrieve the status of the requested actions according to the action ID \
-[retrieve file](#action-retrieve-file) - Retrieve files from a specified endpoint \
-[retrieve file details](#action-retrieve-file-details) - View the file retrieved by the Retrieve File action according to the action ID \
-[quarantine file](#action-quarantine-file) - Quarantine file on a specified endpoint \
-[unquarantine file](#action-unquarantine-file) - Restore a quarantined file on a specified endpoint \
-[block hash](#action-block-hash) - Add a hash that does not exist in the allow or block list to a block list \
-[allow hash](#action-allow-hash) - Add files that do not exist in the allow or block list to an allow list \
-[quarantine device](#action-quarantine-device) - Quarantine a specified endpoint \
-[unquarantine device](#action-unquarantine-device) - Unquarantine a specified endpoint \
-[scan endpoint](#action-scan-endpoint) - Run a scan on selected endpoints \
-[cancel scan endpoint](#action-cancel-scan-endpoint) - Cancel the scan of selected endpoints \
-[get incidents](#action-get-incidents) - Get a list of incidents filtered by a list of incident IDs, modification time, or creation time \
-[get incident details](#action-get-incident-details) - Get extra data fields of a specific incident including alerts and key artifacts \
+[on poll](#action-on-poll) - Callback action for the on_poll ingest functionality <br>
+[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration <br>
+[list endpoints](#action-list-endpoints) - List all the endpoints/sensors configured on the device <br>
+[get policy](#action-get-policy) - Get the policy name for a specific endpoint <br>
+[get action status](#action-get-action-status) - Retrieve the status of the requested actions according to the action ID <br>
+[retrieve file](#action-retrieve-file) - Retrieve files from a specified endpoint <br>
+[retrieve file details](#action-retrieve-file-details) - View the file retrieved by the Retrieve File action according to the action ID <br>
+[quarantine file](#action-quarantine-file) - Quarantine file on a specified endpoint <br>
+[unquarantine file](#action-unquarantine-file) - Restore a quarantined file on a specified endpoint <br>
+[block hash](#action-block-hash) - Add a hash that does not exist in the allow or block list to a block list <br>
+[allow hash](#action-allow-hash) - Add files that do not exist in the allow or block list to an allow list <br>
+[quarantine device](#action-quarantine-device) - Quarantine a specified endpoint <br>
+[unquarantine device](#action-unquarantine-device) - Unquarantine a specified endpoint <br>
+[scan endpoint](#action-scan-endpoint) - Run a scan on selected endpoints <br>
+[cancel scan endpoint](#action-cancel-scan-endpoint) - Cancel the scan of selected endpoints <br>
+[get incidents](#action-get-incidents) - Get a list of incidents filtered by a list of incident IDs, modification time, or creation time <br>
+[get incident details](#action-get-incident-details) - Get extra data fields of a specific incident including alerts and key artifacts <br>
 [get alerts](#action-get-alerts) - Get a list of alerts with multiple events
 
 ## action: 'on poll'
 
 Callback action for the on_poll ingest functionality
 
-Type: **ingest** \
+Type: **ingest** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -65,7 +65,7 @@ No Output
 
 Validate the asset configuration for connectivity using supplied configuration
 
-Type: **test** \
+Type: **test** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -80,7 +80,7 @@ No Output
 
 List all the endpoints/sensors configured on the device
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -102,7 +102,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Get the policy name for a specific endpoint
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -127,7 +127,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Retrieve the status of the requested actions according to the action ID
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -152,7 +152,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Retrieve files from a specified endpoint
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -183,7 +183,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 View the file retrieved by the Retrieve File action according to the action ID
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -208,7 +208,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Quarantine file on a specified endpoint
 
-Type: **contain** \
+Type: **contain** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -237,7 +237,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Restore a quarantined file on a specified endpoint
 
-Type: **correct** \
+Type: **correct** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -264,7 +264,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Add a hash that does not exist in the allow or block list to a block list
 
-Type: **contain** \
+Type: **contain** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -293,7 +293,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Add files that do not exist in the allow or block list to an allow list
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -322,7 +322,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Quarantine a specified endpoint
 
-Type: **contain** \
+Type: **contain** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -347,7 +347,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Unquarantine a specified endpoint
 
-Type: **correct** \
+Type: **correct** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -372,7 +372,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Run a scan on selected endpoints
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -421,7 +421,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Cancel the scan of selected endpoints
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -470,7 +470,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Get a list of incidents filtered by a list of incident IDs, modification time, or creation time
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -515,7 +515,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Get extra data fields of a specific incident including alerts and key artifacts
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -545,7 +545,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Get a list of alerts with multiple events
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -586,7 +586,7 @@ ______________________________________________________________________
 
 Auto-generated Splunk SOAR Connector documentation.
 
-Copyright 2025 Splunk Inc.
+Copyright 2026 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
