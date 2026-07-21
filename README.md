@@ -1,7 +1,7 @@
 # Palo Alto Cortex XDR
 
 Publisher: Cyberforce Limited <br>
-Connector Version: 1.2.1 <br>
+Connector Version: 1.2.2 <br>
 Product Vendor: Palo Alto <br>
 Product Name: Cortex XDR <br>
 Minimum Product Version: 5.4.0
